@@ -47,7 +47,7 @@ double heston_single_path_payoff(double S0, double K, double v0, double r, doubl
     return std::max(new_S - K, 0.0);
 }
 
-double hestonMCPrice(double S0, double K, double v0, double r, double rho, double kappa, double theta, double xi, double T, int N, int num_paths)
+double heston_mc_price(double S0, double K, double v0, double r, double rho, double kappa, double theta, double xi, double T, int N, int num_paths)
 {
     if(num_paths <= 0){
         throw std::invalid_argument("Number of paths must be positive");
@@ -61,8 +61,8 @@ double hestonMCPrice(double S0, double K, double v0, double r, double rho, doubl
         std::cerr << "Warning: Feller condition is not satisfied\n";
     }
 
-    int num_threads = std::thread::hardware_concurrency(); //Multi-threading for optimal performance
-    if (num_threads == 0) num_threads = 2;                 //Default to 2 threads if number of threads is indeterminate 
+    int num_threads = std::thread::hardware_concurrency(); // Multi-threading for optimal performance; Use all CPU cores on the machine
+    if (num_threads == 0) num_threads = 2;                 // Default to 2 threads if number of threads is indeterminate 
 
     std::vector<double> partial_payoff_sum(num_threads, 0.0);
     std::vector<std::thread> threads;

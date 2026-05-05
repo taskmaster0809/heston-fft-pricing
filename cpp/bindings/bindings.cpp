@@ -6,7 +6,7 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(heston, m){
-    m.def("heston_mc_price", &hestonMCPrice, "Price a European call under Heston via Monte Carlo",
+    m.def("heston_mc_price", &heston_mc_price, "Price a European call under Heston via Monte Carlo",
     py::arg("S0"), 
     py::arg("K"), 
     py::arg("v0"), 
@@ -20,7 +20,7 @@ PYBIND11_MODULE(heston, m){
     py::arg("num_paths")=1000
     );
 
-    m.def("black_scholes_price", &blackScholesPrice, "Price a European call under Black-Scholes via analytical solution",
+    m.def("black_scholes_price", &black_scholes_price, "Price a European call under Black-Scholes via analytical solution",
     py::arg("S"),
     py::arg("K"),
     py::arg("T"),

@@ -10,7 +10,7 @@ double norm_cdf(double value)
     return 0.5 * std::erfc(-value * inv_sqrt2);
 }
 
-double blackScholesPrice(double S, double K, double T, double r, double sigma)
+double black_scholes_price(double S, double K, double T, double r, double sigma)
 {
     if (S <= 0 || K <= 0 || T <= 0 || sigma <= 0){
         throw std::invalid_argument("S, K, T and sigma must be strictly positive");
