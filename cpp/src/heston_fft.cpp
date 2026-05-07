@@ -32,13 +32,13 @@ complex heston_fourier_transform(double v, double alpha, double S0, double v0, d
     return exp(-r * T) * phi / (alpha * alpha + alpha - v * v + i * (2 * alpha + 1) * v);
 }
 
-double heston_fft_price(double S0, double strike, double v0, double eta, double alpha, double r, double rho, double kappa, double theta, double xi, double T, int N)
+double heston_fft_price(double S0, double K, double v0, double eta, double alpha, double r, double rho, double kappa, double theta, double xi, double T, int N)
 {
     if(alpha <= 0){
         throw std::invalid_argument("alpha must be positive");
     }
 
-    if(S0 <= 0 || v0 < 0 || kappa <= 0 || theta < 0 || xi <= 0 || T <= 0 || (rho < -1 || rho > 1) || N <= 0 || strike <= 0){
+    if(S0 <= 0 || v0 < 0 || kappa <= 0 || theta < 0 || xi <= 0 || T <= 0 || (rho < -1 || rho > 1) || N <= 0 || K <= 0){
         throw std::invalid_argument("Invalid range for parameters");
     }
 
@@ -51,7 +51,7 @@ double heston_fft_price(double S0, double strike, double v0, double eta, double 
 
     const double lambda { (2 * pi) / (N * eta) };
     const double b { pi / eta };
-    const double log_strike { log(strike) };
+    const double log_strike { log(K) };
 
     std::vector<double> log_strike_grid(N);
 

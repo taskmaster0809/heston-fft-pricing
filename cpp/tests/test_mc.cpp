@@ -22,7 +22,7 @@ TEST_CASE("Heston price is less than spot [MC]")
 }
 
 // Validating MC pricer against Black Scholes
-TEST_CASE("Heston price is close to Black-Scholes price for xi approx 0 and v0 = theta [MC]")
+TEST_CASE("Heston converges to Black-Scholes when xi -> 0 and v0 = theta [MC]")
 {
     auto K = GENERATE(90, 100, 110); 
 
@@ -41,7 +41,7 @@ TEST_CASE("Heston price is close to Black-Scholes price for xi approx 0 and v0 =
     if(std::abs(K - S0) < 1e-12) tol *= 1.4;
     else if(K > S0) tol *= 1.8;
 
-    REQUIRE_THAT( heston_price, Catch::Matchers::WithinRel(bs_price, tol) );
+    REQUIRE_THAT(heston_price, Catch::Matchers::WithinRel(bs_price, tol));
 }
 
 TEST_CASE("Higher strike implies lower price [MC]")
