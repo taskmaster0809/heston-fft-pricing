@@ -1,6 +1,7 @@
-#include "../include/utils.h"
-#include <cmath>
-#include <stdexcept>
+#include "utils.h"
+
+#include <cmath>     // For std::log, std::sqrt, std::exp, std::erfc
+#include <stdexcept> // For std::invalid_argument
 
 using std::exp, std::log, std::sqrt;
 

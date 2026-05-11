@@ -3,7 +3,7 @@ from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent.parent / "build" / "cpp"))
 
-import heston
+import heston # type: ignore
 from math import sqrt
 import time
 
@@ -16,7 +16,7 @@ N = 2 ** 14
 
 bs_price = heston.black_scholes_price(S0, K, T, r, sqrt(v0)) # Black-Scholes function takes sigma, i.e., sqrt(v0)
 
-print("Performing Monte Carlo simulations:")
+print("Performing Monte Carlo simulations...")
 start = time.time()
 heston_mc_price = heston.heston_mc_price(S0, K, v0, r, rho, kappa, theta, xi, T, num_paths=num_paths)
 end = time.time()
@@ -36,5 +36,6 @@ print(f"Black Scholes and Heston model relative error via Monte Carlo: "
 print(f"Black Scholes and Heston model relative error via FFT: "
       f"{(abs(bs_price - heston_fft_price) / max(bs_price, heston_fft_price)) * 100:.5f}%")
 
-# Fast Fourier Transform is much faster than Monte Carlo with good accuracy. However, FFT is limited to vanilla European options where CF can be calculated analytically
-# Moreover, Monte Carlo can surpass FFT in accuracy with enough computations (for example, try using a million paths) but is much slower
+# Fast Fourier Transform is much faster than Monte Carlo with good accuracy. However, FFT is limited to vanilla
+# European options where CF can be calculated analytically. Moreover, Monte Carlo can surpass FFT in accuracy with
+# enough computations (for example, try using a million paths) but is much slower
