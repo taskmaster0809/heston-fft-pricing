@@ -1,5 +1,4 @@
 import sys
-import time
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent.parent / "build" / "cpp"))
@@ -11,8 +10,6 @@ import numpy as np
 import heston # type: ignore
 
 from data.market_data import MarketData
-
-timer = []
 
 # Arbitrary grid spacing parameters
 ETA = 0.1
@@ -31,6 +28,8 @@ strikes = calls_data["strike"].values
 maturities = calls_data["timeToExpiry"].values
 market_ivs = calls_data["impliedVol"].values
 
+unique_maturities = calls_data["timeToExpiry"].unique()
+
 
 def implied_vol_from_price(S0, K, T, r, price):
     def objective(imp_vol):
@@ -41,22 +40,24 @@ def implied_vol_from_price(S0, K, T, r, price):
     except ValueError:
         return np.nan
 
+
 def implied_vol_residuals(x): # x=(v0, rho, kappa, theta, xi)
-    start = time.time()
-    heston_prices = [
-        heston.heston_fft_price(data.spot, K, x[0], ETA, ALPHA, data.interest_rate, x[1], x[2], x[3], x[4], T, N)
-        for K, T in zip(strikes, maturities)
-    ]
-    end = time.time()
+    heston_prices = np.empty(len(calls_data))
+
+    for T in unique_maturities:
+        indices = np.isclose(calls_data["timeToExpiry"], T)
+        this_strikes = calls_data.loc[indices, "strike"].values
+        prices = heston.heston_fft_price(data.spot, this_strikes, x[0], ETA, ALPHA, data.interest_rate,
+                                         x[1], x[2], x[3], x[4], T, N)
+
+        heston_prices[indices] = prices
 
     heston_ivs = [
         implied_vol_from_price(data.spot, K, T, data.interest_rate, heston_price)
         for K, T, heston_price in zip(strikes, maturities, heston_prices)
     ]
-    timer.append(end-start)
+
     residuals = np.array(market_ivs) - np.array(heston_ivs)
-    residuals = residuals[np.isfinite(residuals)]
+    residuals[~np.isfinite(residuals)] = 1e6 # Punish bad parameter region
     return residuals
 
-print(implied_vol_residuals(x=(0.04, -0.5, 2, 0.04, 0.2)))
-print(timer)

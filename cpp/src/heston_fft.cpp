@@ -11,9 +11,9 @@
 
 using std::exp, std::log, std::sqrt;
 using complex = std::complex<double>;
-using vector = std::vector<double>;
+using dvec = std::vector<double>;
 
-complex heston_cf(complex u, double S0, double v0, double r, double rho, double kappa, double theta, double xi, double T)
+complex heston_cf(const complex& u, double S0, double v0, double r, double rho, double kappa, double theta, double xi, double T)
 {
     constexpr complex i { 0.0, 1.0 };
     const complex x = kappa - rho * xi * i * u;
@@ -33,7 +33,7 @@ complex heston_fourier_transform(double v, double alpha, double S0, double v0, d
     return exp(-r * T) * phi / (alpha * alpha + alpha - v * v + i * (2 * alpha + 1) * v);
 }
 
-vector heston_fft_price(double S0, const vector& K, double v0, double eta, double alpha, double r, double rho, double kappa, double theta, double xi, double T, int N)
+dvec heston_fft_price(double S0, const dvec& K, double v0, double eta, double alpha, double r, double rho, double kappa, double theta, double xi, double T, int N)
 {
     if(alpha <= 0){
         throw std::invalid_argument("alpha must be positive");
@@ -54,10 +54,10 @@ vector heston_fft_price(double S0, const vector& K, double v0, double eta, doubl
 
     const double lambda { (2 * pi) / (N * eta) };
     const double b { pi / eta };
-    vector log_strikes(K.size());
+    dvec log_strikes(K.size());
     std::transform(K.begin(), K.end(), log_strikes.begin(), [](double k){ return log(k); });
 
-    vector log_strike_grid(N);
+    dvec log_strike_grid(N);
 
     for(int u = 0; u < N; ++u){
         log_strike_grid[u] = -b + lambda * u;
@@ -94,8 +94,8 @@ vector heston_fft_price(double S0, const vector& K, double v0, double eta, doubl
 
     fftw_execute(p); // Execute FFT plan
     
-    vector call_price_grid(N);
-    vector call_price(K.size());
+    dvec call_price_grid(N);
+    dvec call_price(K.size());
 
     for(int u = 0; u < N; ++u){
         call_price_grid[u] = (exp(-alpha * log_strike_grid[u]) / pi) * out[u][0];
