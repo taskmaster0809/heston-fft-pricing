@@ -1,8 +1,8 @@
 #include "heston_mc.h"
 
 #include <iostream>  // For std::cerr
-#include <cmath>     // For std::exp and std::sqrt
-#include <random>    // For std::mt19937 and std::normal_distribution
+#include <cmath>     // For std::exp, std::sqrt
+#include <random>    // For std::mt19937, std::normal_distribution
 #include <stdexcept> // For std::invalid_argument
 #include <algorithm> // For std::max
 #include <thread>    // For multi-threading
