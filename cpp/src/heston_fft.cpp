@@ -2,7 +2,7 @@
 
 #include "heston_fft.h"
 
-#include <cmath>     // For std::exp, std::sqrt and std::log
+#include <cmath>     // For std::exp, std::sqrt, std::log
 #include <complex>   // For std::complex
 #include <stdexcept> // For std::invalid_argument
 #include <vector>    // For std::vector
