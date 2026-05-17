@@ -8,6 +8,7 @@ sys.path.append(str(Path(__file__).parent.parent.parent / "build" / "cpp"))
 import pandas as pd
 import yfinance as yf
 from scipy.optimize import brentq
+from scipy.stats import norm
 import numpy as np
 
 import heston
@@ -25,8 +26,8 @@ class MarketData:
 
         self.expiries = []
         for expiry in expiries:
-            if 30 / 365.25 <= get_time_to_expiry(expiry, self.today) <= 1:
-                # Only using expiries from 1 month to 1 year for calibration
+            if 30 / 365.25 <= get_time_to_expiry(expiry, self.today) <= 2:
+                # Only using expiries from 1 month to 2 year for calibration
                 self.expiries.append(expiry)
 
         # Spot price of underlying: S0 in Heston model
@@ -40,8 +41,8 @@ class MarketData:
         option_chain = self.ticker.option_chain(date)
 
         calls = option_chain.calls[["strike", "lastPrice", "bid", "ask"]]
-        calls = calls[ (0.9 * self.spot <= calls["strike"]) &
-                       (calls["strike"] <= 1.1 * self.spot) ] # Filtering out deep OTM and ITM options
+        calls = calls[ (0.8 * self.spot <= calls["strike"]) &
+                       (calls["strike"] <= 1.2 * self.spot) ] # Filtering out deep OTM and ITM options
 
         calls["marketPrice"] = np.where(
             (calls["bid"] > 0) & (calls["ask"] > 0),
@@ -56,8 +57,8 @@ class MarketData:
         calls = calls.dropna(subset=["marketPrice"])
         calls.reset_index(drop=True, inplace=True)
 
-        if len(calls) > 8:
-            indices = np.linspace(0, len(calls) - 1, 8, dtype=int)
+        if len(calls) > 15:
+            indices = np.linspace(0, len(calls) - 1, 15, dtype=int)
             calls = calls.iloc[indices]
 
         return calls[["strike", "marketPrice", "timeToExpiry"]]
@@ -84,3 +85,7 @@ class MarketData:
         calls.dropna(subset=["impliedVol"], inplace=True)
         calls.reset_index(drop=True, inplace=True)
         return calls[["strike", "timeToExpiry", "impliedVol"]]
+
+    def vega(self, K, T, r, sigma):
+        d1 = (np.log(self.spot / K) + (r + sigma ** 2 / 2) * T) / (sigma * np.sqrt(T))
+        return self.spot * norm.pdf(d1) * np.sqrt(T)

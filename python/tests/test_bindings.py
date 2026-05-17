@@ -1,11 +1,11 @@
 import sys
 from pathlib import Path
+from math import sqrt
+import time
 
 sys.path.append(str(Path(__file__).parent.parent.parent / "build" / "cpp"))
 
 import heston # type: ignore
-from math import sqrt
-import time
 
 S0=100; K=[90, 100, 110]; v0=0.04; r=0.1; rho=-0.5; kappa=2; theta=0.04; xi=1e-2; T=1
 num_paths = 100_000

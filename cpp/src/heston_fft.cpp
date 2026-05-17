@@ -45,10 +45,6 @@ dvec heston_fft_price(double S0, const dvec& K, double v0, double eta, double al
         throw std::invalid_argument("Invalid range for parameters");
     }
 
-    if(2 * kappa * theta <= xi * xi) {
-        std::cerr << "Warning: Feller condition is not satisfied\n";
-    }
-
     constexpr double pi { 3.14159265358979323846264338327950288 }; 
     constexpr complex i { 0.0, 1.0 };
 

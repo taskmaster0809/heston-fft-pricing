@@ -23,7 +23,7 @@ TEST_CASE("Heston price is less than spot [FFT]")
     REQUIRE( std::all_of(heston_price.begin(), heston_price.end(), [](double price){ return price < S0 && price > 0; }) );
 }
 
-// // Validating FFT pricer against Monte Carlo pricer with 5% tolerance
+// Validating FFT pricer against Monte Carlo pricer with 5% tolerance
 TEST_CASE("Heston FFT price is close to Heston Monte Carlo price [FFT]")
 { 
     dvec K { 90, 100, 110 };
@@ -42,7 +42,7 @@ TEST_CASE("Heston FFT price is close to Heston Monte Carlo price [FFT]")
     }
 }
 
-// // Validating FFT pricer against Black-Scholes pricer with 1% tolerance
+// Validating FFT pricer against Black-Scholes pricer with 1% tolerance
 TEST_CASE("Heston converges to Black-Scholes when xi -> 0 and v0 = theta [FFT]")
 {
     dvec K { 90, 100, 110 };
