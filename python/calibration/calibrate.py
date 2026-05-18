@@ -45,10 +45,10 @@ def calibrate_params(market_data: MarketData, calls_data, v0_init=0.03, rho_init
         for T in unique_maturities:
             indices = np.isclose(calls_data["timeToExpiry"], T)
             this_strikes = calls_data.loc[indices, "strike"].values
-            prices = heston.heston_fft_price(market_data.spot, this_strikes, x[0], ETA, ALPHA,
+            price = heston.heston_fft_price(market_data.spot, this_strikes, x[0], ETA, ALPHA,
                                              market_data.interest_rate,
                                              x[1], x[2], x[3], x[4], T, N)
-            heston_prices[indices] = prices
+            heston_prices[indices] = price
 
         heston_ivs = [
             implied_vol_from_price(market_data.spot, K, T, market_data.interest_rate, heston_price)
