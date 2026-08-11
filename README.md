@@ -75,13 +75,6 @@ brew install cmake pkgconfig fftw
 vcpkg install fftw3 pkgconf
 ```
 
-### Python dependencies
-```bash
-pip install -r requirements.txt
-```
-
-`pybind11` is fetched automatically by CMake and does not need to be installed manually.
-
 ---
 
 ## Building
@@ -95,6 +88,13 @@ cmake --build .
 ```
 
 The compiled Python module `heston.cpython-*.so` will be placed in `build/cpp/`.
+
+### Python dependencies
+```bash
+pip install -r python\requirements.txt
+```
+
+`pybind11` is fetched automatically by CMake and does not need to be installed manually.
 
 ---
 
