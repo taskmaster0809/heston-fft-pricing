@@ -91,7 +91,7 @@ The compiled Python module `heston.cpython-*.so` will be placed in `build/cpp/`.
 
 ### Python dependencies
 ```bash
-pip install -r python\requirements.txt
+pip install -r ../python/requirements.txt
 ```
 
 `pybind11` is fetched automatically by CMake and does not need to be installed manually.
