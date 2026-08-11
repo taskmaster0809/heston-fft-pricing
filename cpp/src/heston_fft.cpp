@@ -39,7 +39,7 @@ dvec heston_fft_price(double S0, const dvec& K, double v0, double eta, double al
         throw std::invalid_argument("alpha must be positive");
     }
 
-    if(S0 <= 0 || v0 < 0 || kappa <= 0 || theta < 0 || xi <= 0 || T <= 0 || (rho < -1 || rho > 1) || N <= 0 || 
+    if(S0 <= 0 || v0 < 0 || kappa <= 0 || theta < 0 || xi <= 0 || T <= 0 || (rho < -1 || rho > 1) || N <= 0 || eta <= 0 ||
        std::any_of(K.begin(), K.end(), [](double n){ return n <= 0; }))
     {
         throw std::invalid_argument("Invalid range for parameters");
